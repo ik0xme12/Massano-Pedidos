@@ -37,19 +37,23 @@ export const productService = {
 
 export const orderService = {
   async create(order: {
+    user_id: string
     delivery_address: string
     notes?: string
     payment_method: string
     total: number
+    restaurant_id?: string
     items: Array<{ product_id: string; quantity: number; price_at_purchase: number }>
   }) {
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .insert({
+        user_id: order.user_id,
         delivery_address: order.delivery_address,
         notes: order.notes,
         payment_method: order.payment_method,
         total: order.total,
+        restaurant_id: order.restaurant_id,
         status: 'pending',
       })
       .select()

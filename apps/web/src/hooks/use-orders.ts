@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { orderService } from '@/lib/supabase-services'
+import { supabase } from '@/lib/supabase'
 import type { CartItem } from '@shared/types'
 
 export function useSaveOrder() {
@@ -18,9 +19,13 @@ export function useSaveOrder() {
       setLoading(true)
       setError(null)
 
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user?.id) throw new Error('Usuario no autenticado')
+
       const total = items.reduce((sum, item) => sum + (item.product.price ?? 0) * item.quantity, 0) + 600
 
       const order = await orderService.create({
+        user_id: user.id,
         delivery_address: address,
         payment_method: paymentMethod,
         total,
