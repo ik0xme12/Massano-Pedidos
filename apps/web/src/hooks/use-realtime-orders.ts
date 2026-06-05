@@ -15,15 +15,21 @@ export function useOrderSubscription(orderId: string) {
     const fetchOrder = async () => {
       try {
         setLoading(true)
+        console.log('Fetching order:', orderId)
         const { data, error: fetchError } = await supabase
           .from('orders')
           .select('*')
           .eq('id', orderId)
           .single()
 
-        if (fetchError) throw fetchError
+        if (fetchError) {
+          console.error('Supabase error:', fetchError)
+          throw fetchError
+        }
+        console.log('Order loaded:', data)
         setOrder(data as Order)
       } catch (err) {
+        console.error('Catch error:', err)
         setError(err instanceof Error ? err : new Error('Failed to load order'))
       } finally {
         setLoading(false)
