@@ -1,15 +1,21 @@
 import type { Product } from '@shared/types'
 
+const normalizeString = (str: string): string =>
+  str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+
 export const productSearch = {
   search(products: Product[], query: string): Product[] {
     if (!query.trim()) return products
 
-    const q = query.toLowerCase()
+    const q = normalizeString(query)
     return products.filter(
       (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.description?.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q)
+        normalizeString(p.name).includes(q) ||
+        normalizeString(p.description || '').includes(q) ||
+        normalizeString(p.category || '').includes(q)
     )
   },
 
