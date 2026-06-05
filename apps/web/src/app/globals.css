@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ──────────────────────────────────────────
+   Massano Cafetería — Design System
+   Paleta: Negro · Dorado · Verde Oliva
+   ────────────────────────────────────────── */
+
+:root {
+  /* Base */
+  --background:  #F8F7F4;          /* blanco cálido, papel */
+  --foreground:  #1C1C1C;          /* negro marca */
+
+  /* Surfaces */
+  --card:               #FFFFFF;
+  --card-foreground:    #1C1C1C;
+  --muted:              #F2F0EB;
+  --muted-foreground:   #7A7670;
+
+  /* ── Brand Colors ── */
+  --gold:         #C4A35A;         /* dorado logo */
+  --gold-light:   #E8D5A3;         /* dorado suave / hover */
+  --gold-dark:    #9E7E3A;         /* dorado oscuro / pressed */
+  --olive:        #2D4A3E;         /* verde oliva oscuro */
+  --olive-light:  #3D6455;         /* verde oliva medio */
+  --olive-muted:  #EAF0EE;         /* verde oliva muy suave / bg */
+  --brand-black:  #1C1C1C;         /* negro marca */
+
+  /* Semánticos */
+  --primary:            var(--gold);
+  --primary-foreground: #1C1C1C;
+  --secondary:          var(--olive);
+  --secondary-foreground: #F8F7F4;
+  --accent:             var(--gold-light);
+  --accent-foreground:  var(--brand-black);
+
+  /* Status pedidos */
+  --destructive:        #C0392B;
+  --destructive-foreground: #FFFFFF;
+  --success:            var(--olive-light);
+  --success-foreground: #FFFFFF;
+  --warning:            #E67E22;
+  --warning-foreground: #1C1C1C;
+
+  /* Borders & inputs */
+  --border:  #E2DDD5;
+  --input:   #E2DDD5;
+  --ring:    var(--gold);
+
+  /* Radius */
+  --radius: 0.625rem;
+
+  /* Order status */
+  --status-pending:    #F39C12;
+  --status-confirmed:  #2980B9;
+  --status-preparing:  var(--gold);
+  --status-ready:      var(--olive-light);
+  --status-on-the-way: #8E44AD;
+  --status-delivered:  var(--olive);
+  --status-cancelled:  #C0392B;
+}
+
+@theme inline {
+  /* Base */
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-muted:                var(--muted);
+  --color-muted-foreground:     var(--muted-foreground);
+
+  /* Brand */
+  --color-gold:                 var(--gold);
+  --color-gold-light:           var(--gold-light);
+  --color-gold-dark:            var(--gold-dark);
+  --color-olive:                var(--olive);
+  --color-olive-light:          var(--olive-light);
+  --color-olive-muted:          var(--olive-muted);
+  --color-brand-black:          var(--brand-black);
+
+  /* Semánticos */
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-secondary:            var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-destructive:          var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success:              var(--success);
+  --color-success-foreground:   var(--success-foreground);
+  --color-warning:              var(--warning);
+  --color-warning-foreground:   var(--warning-foreground);
+  --color-border:               var(--border);
+  --color-input:                var(--input);
+  --color-ring:                 var(--ring);
+
+  /* Typography */
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans:    var(--font-inter), system-ui, sans-serif;
+
+  /* Radius */
+  --radius-sm:   calc(var(--radius) - 2px);
+  --radius-md:   var(--radius);
+  --radius-lg:   calc(var(--radius) + 4px);
+  --radius-xl:   calc(var(--radius) + 8px);
+  --radius-full: 9999px;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 40%, transparent);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ── Scrollbar minimalista ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gold-light); border-radius: 99px; }
+
+/* ── Utilidad: texto con gradiente dorado ── */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
