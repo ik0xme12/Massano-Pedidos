@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+
 import { MassanoLogo } from "@/components/brand/MassanoLogo"
 import { Button } from "@/components/ds"
 import { CheckCircle, Clock } from "lucide-react"
