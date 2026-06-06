@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { MassanoLogo } from "@/components/brand/MassanoLogo"
 import { Button } from "@/components/ds"
 import { CartDrawer } from "@/components/cart/CartDrawer"
@@ -92,7 +93,14 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="bg-olive text-white overflow-hidden">
         <div className="mx-auto max-w-2xl px-5 pt-10 pb-14">
-          <MassanoLogo variant="white" size="lg" className="mb-4" priority />
+          <Image
+            src="/massano5.png"
+            alt="Massano Cafetería"
+            width={280}
+            height={100}
+            priority
+            className="object-contain mb-4"
+          />
           <h1 className="font-display text-4xl font-bold leading-tight mb-4 text-white">
             Tu mesa favorita,<br />
             <span className="text-gold">en tu puerta.</span>
