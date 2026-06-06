@@ -101,7 +101,7 @@ export default function Home() {
             priority
             className="object-contain mb-4"
             style={{
-              filter: "brightness(0) saturate(100%) invert(69%) sepia(28%) saturate(550%) hue-rotate(4deg) brightness(92%)",
+              filter: "brightness(0) saturate(100%) invert(69%) sepia(28%) saturate(550%) hue-rotate(4deg) brightness(80%)",
             }}
           />
           <h1 className="font-display text-4xl font-bold leading-tight mb-4 text-white">
