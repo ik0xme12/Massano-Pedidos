@@ -111,10 +111,6 @@ export default function RestaurantesPage() {
                           {restaurant.delivery_time_min}–{restaurant.delivery_time_max} min
                         </span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Truck className="h-3 w-3" />
-                        <span>Envío {formatPrice(restaurant.delivery_fee)}</span>
-                      </div>
                     </div>
 
                     {/* Status */}

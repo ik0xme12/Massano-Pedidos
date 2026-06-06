@@ -189,17 +189,8 @@ export function PedidoContent({ orderId }: PedidoContentProps) {
         </section>
 
         {/* Price Summary */}
-        <section className="bg-white border border-border rounded-xl p-6 space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Subtotal</span>
-            <span>{formatPrice((order.total - order.delivery_fee) || 0)}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Envío</span>
-            <span>{formatPrice(order.delivery_fee)}</span>
-          </div>
-          <div className="h-px bg-border" />
-          <div className="flex justify-between font-semibold">
+        <section className="bg-white border border-border rounded-xl p-6">
+          <div className="flex justify-between font-semibold text-base">
             <span>Total</span>
             <span>{formatPrice(order.total)}</span>
           </div>
