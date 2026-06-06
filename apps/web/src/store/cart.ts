@@ -30,10 +30,27 @@ interface CartStore {
   totalPrice:  () => number
 }
 
-const getItemKey = (productId: string, customization?: ProductCustomization): string => {
-  return customization
-    ? `${productId}-${JSON.stringify(customization)}`
-    : productId
+const sanitizeCustomization = (c?: ProductCustomization): ProductCustomization | undefined => {
+  if (!c) return undefined
+  const sanitized: any = {}
+  for (const key in c) {
+    const val = c[key as keyof ProductCustomization]
+    if (val !== undefined && val !== null && (typeof val !== 'object' || Object.keys(val as any).length > 0)) {
+      sanitized[key] = val
+    }
+  }
+  return Object.keys(sanitized).length === 0 ? undefined : sanitized
+}
+
+const customizationToKey = (customization?: ProductCustomization): string | undefined => {
+  const sanitized = sanitizeCustomization(customization)
+  if (!sanitized) return undefined
+  const keys = Object.keys(sanitized).sort()
+  return JSON.stringify(keys.reduce((obj, k) => ({ ...obj, [k]: (sanitized as any)[k] }), {}))
+}
+
+const compareCustomizations = (c1?: ProductCustomization, c2?: ProductCustomization): boolean => {
+  return customizationToKey(c1) === customizationToKey(c2)
 }
 
 export const useCartStore = create<CartStore>()(
@@ -43,42 +60,47 @@ export const useCartStore = create<CartStore>()(
       isOpen: false,
 
       add: (product, customization) => {
-        const itemKey = getItemKey(product.id, customization)
+        const sanitized = sanitizeCustomization(customization)
         const existing = get().items.find((i) =>
           i.product.id === product.id &&
-          JSON.stringify(i.customization) === JSON.stringify(customization)
+          compareCustomizations(i.customization, sanitized)
         )
 
         if (existing) {
           set({ items: get().items.map((i) =>
             i.product.id === product.id &&
-            JSON.stringify(i.customization) === JSON.stringify(customization)
+            compareCustomizations(i.customization, sanitized)
               ? { ...i, quantity: i.quantity + 1 }
               : i
           )})
         } else {
-          set({ items: [...get().items, { product, quantity: 1, customization }] })
+          set({ items: [...get().items, { product, quantity: 1, customization: sanitized }] })
         }
       },
 
-      remove: (productId, customizationKey) =>
+      remove: (productId, customizationKey) => {
+        const targetCustomization = customizationKey ? JSON.parse(customizationKey) : undefined
         set({ items: get().items.filter((i) =>
           !(i.product.id === productId &&
-            JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined))
-        )}),
+            compareCustomizations(i.customization, targetCustomization))
+        )})
+      },
 
-      increment: (productId, customizationKey) =>
+      increment: (productId, customizationKey) => {
+        const targetCustomization = customizationKey ? JSON.parse(customizationKey) : undefined
         set({ items: get().items.map((i) =>
           i.product.id === productId &&
-          JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined)
+          compareCustomizations(i.customization, targetCustomization)
             ? { ...i, quantity: i.quantity + 1 }
             : i
-        )}),
+        )})
+      },
 
       decrement: (productId, customizationKey) => {
+        const targetCustomization = customizationKey ? JSON.parse(customizationKey) : undefined
         const item = get().items.find((i) =>
           i.product.id === productId &&
-          JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined)
+          compareCustomizations(i.customization, targetCustomization)
         )
         if (!item) return
         if (item.quantity === 1) {
@@ -86,7 +108,7 @@ export const useCartStore = create<CartStore>()(
         } else {
           set({ items: get().items.map((i) =>
             i.product.id === productId &&
-            JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined)
+            compareCustomizations(i.customization, targetCustomization)
               ? { ...i, quantity: i.quantity - 1 }
               : i
           )})

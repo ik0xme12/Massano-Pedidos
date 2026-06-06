@@ -53,54 +53,66 @@ export function CartDrawer() {
             </div>
           ) : (
             <ul className="divide-y divide-border">
-              {items.map(({ product, quantity }) => (
-                <li key={product.id} className="flex items-center gap-3 px-5 py-4">
-                  {/* Image */}
-                  {product.image_url && (
-                    <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
-                      <Image
-                        src={product.image_url}
-                        alt={product.name || "Product"}
-                        width={56}
-                        height={56}
-                        className="w-full h-full object-cover"
-                      />
+              {items.map(({ product, quantity, customization }, idx) => {
+                const customizationKey = customization ? JSON.stringify(customization) : undefined
+                return (
+                  <li key={`${product.id}-${customizationKey || 'default'}-${idx}`} className="flex items-center gap-3 px-5 py-4">
+                    {/* Image */}
+                    {product.image_url && (
+                      <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
+                        <Image
+                          src={product.image_url}
+                          alt={product.name || "Product"}
+                          width={56}
+                          height={56}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium leading-snug line-clamp-1">
+                        {product.name}
+                      </p>
+                      {customization && (
+                        <div className="text-xs text-muted-foreground space-y-0.5 mt-1">
+                          {customization.size && <p>• {customization.size}</p>}
+                          {customization.temperature && <p>• {customization.temperature}</p>}
+                          {customization.sugar !== undefined && <p>• {customization.sugar ? 'Con' : 'Sin'} azúcar</p>}
+                          {customization.mayonnaise !== undefined && <p>• {customization.mayonnaise ? 'Con' : 'Sin'} mayo</p>}
+                          {customization.milkType && <p>• {customization.milkType}</p>}
+                        </div>
+                      )}
+                      <p className="text-sm font-bold text-foreground mt-0.5">
+                        {formatPrice(product.price * quantity)}
+                      </p>
                     </div>
-                  )}
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-snug line-clamp-1">
-                      {product.name}
-                    </p>
-                    <p className="text-sm font-bold text-foreground mt-0.5">
-                      {formatPrice(product.price * quantity)}
-                    </p>
-                  </div>
-
-                  {/* Controls */}
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <button
-                      onClick={() => decrement(product.id)}
-                      className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                    >
-                      {quantity === 1
-                        ? <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                        : <Minus className="h-3.5 w-3.5" />
-                      }
-                    </button>
-                    <span className="w-5 text-center text-sm font-semibold tabular-nums">
-                      {quantity}
-                    </span>
-                    <button
-                      onClick={() => increment(product.id)}
-                      className="w-7 h-7 rounded-full bg-brand-black text-white flex items-center justify-center hover:bg-brand-black/80 transition-colors"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </li>
-              ))}
+                    {/* Controls */}
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <button
+                        onClick={() => decrement(product.id, customizationKey)}
+                        className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                      >
+                        {quantity === 1
+                          ? <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          : <Minus className="h-3.5 w-3.5" />
+                        }
+                      </button>
+                      <span className="w-5 text-center text-sm font-semibold tabular-nums">
+                        {quantity}
+                      </span>
+                      <button
+                        onClick={() => increment(product.id, customizationKey)}
+                        className="w-7 h-7 rounded-full bg-brand-black text-white flex items-center justify-center hover:bg-brand-black/80 transition-colors"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           )}
         </div>

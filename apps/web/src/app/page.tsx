@@ -45,13 +45,12 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("Todo")
   const [sortBy, setSortBy] = useState<"name" | "price-asc" | "price-desc" | "newest">("newest")
   const [customizeProduct, setCustomizeProduct] = useState<Product | null>(null)
-  const [lastCustomization, setLastCustomization] = useState<ProductCustomization | null>(null)
 
   const { add, totalItems, toggleCart, items } = useCartStore()
   const { products, loading, error } = useProducts()
   const { user, signOut } = useAuth()
   const loginModal = useLoginModal()
-  const { saveCustomization, getCustomization } = useProductCustomizations()
+  const { saveCustomization } = useProductCustomizations()
 
   const getQuantity = (id: string) =>
     items.find((i) => i.product.id === id)?.quantity ?? 0
@@ -66,10 +65,6 @@ export default function Home() {
   const handleAddProduct = async (product: Product) => {
     if (needsCustomization(product)) {
       setCustomizeProduct(product)
-      if (user) {
-        const saved = await getCustomization(user.id, product.id)
-        setLastCustomization(saved)
-      }
     } else {
       add(product as any)
     }
@@ -81,7 +76,6 @@ export default function Home() {
       if (user) {
         try {
           await saveCustomization(user.id, customizeProduct.id, customization)
-          setLastCustomization(customization)
         } catch (err) {
           console.error('Error saving customization:', err)
         }
@@ -291,6 +285,13 @@ export default function Home() {
                         className="border border-brand-black rounded-full px-4 py-1.5 text-xs font-medium hover:bg-brand-black hover:text-white transition-colors"
                       >
                         + Agregar
+                      </button>
+                    ) : needsCustomization(product) ? (
+                      <button
+                        onClick={toggleCart}
+                        className="border border-gold bg-gold/5 text-gold rounded-full px-4 py-1.5 text-xs font-medium hover:bg-gold/10 transition-colors"
+                      >
+                        {qty} en carrito
                       </button>
                     ) : (
                       <div className="flex items-center gap-2 border border-brand-black rounded-full px-2 py-1">
