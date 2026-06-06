@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { Button } from "@/components/ds"
+import { OrderQRCode } from "@/components/orders/OrderQRCode"
 import { CheckCircle, Clock } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
@@ -44,6 +45,12 @@ export function PedidoConfirmadoContent() {
             <p className="text-gold font-semibold">20 – 35 minutos</p>
           </div>
         </div>
+
+        {orderId && (
+          <div className="bg-white/10 rounded-2xl p-6">
+            <OrderQRCode orderId={orderId} size={180} />
+          </div>
+        )}
 
         <div className="space-y-3">
           {orderId && (
