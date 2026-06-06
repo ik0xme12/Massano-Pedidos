@@ -170,11 +170,11 @@ export default function Home() {
             }}
           />
           <h1 className="font-display text-4xl font-bold leading-tight mb-4 text-white">
-            Tu mesa favorita,<br />
+            Tu pan y café favoritos,<br />
             <span className="text-gold">en tu puerta.</span>
           </h1>
           <p className="text-white/70 text-base leading-relaxed mb-8 max-w-sm">
-            Pedí tus favoritos de la cafetería y los recibís frescos en minutos.
+            Ordena tus favoritos de la cafetería y recíbelos frescos en minutos.
           </p>
           <div className="flex flex-wrap items-center gap-4 mb-8 text-sm text-white/60">
             <div className="flex items-center gap-1.5">
