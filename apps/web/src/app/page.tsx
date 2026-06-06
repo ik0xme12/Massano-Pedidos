@@ -19,7 +19,26 @@ import { productSearch } from "@/lib/product-search"
 import { Clock, ShoppingBag, Star, Truck, LogOut } from "lucide-react"
 import type { Product } from "@shared/types"
 
-const CATEGORIES = ["Todo", "Desayunos", "Almuerzos", "Cafetería", "Postres", "Bebidas"]
+const CATEGORIES = [
+  "Todo",
+  "Pan Gourmet",
+  "Masa Madre",
+  "Pan Tradicional",
+  "Panques",
+  "Galletas",
+  "Pasteles",
+  "Tartas",
+  "Postres",
+  "Bebidas Calientes",
+  "Bebidas Frías",
+  "Frappes",
+  "Bebidas de Temporada",
+  "Sándwiches",
+  "Sándwiches de Temporada",
+  "Ensaladas",
+  "Combos Fijos",
+  "Combos Rolados",
+]
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
