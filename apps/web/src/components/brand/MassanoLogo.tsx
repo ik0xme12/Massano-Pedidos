@@ -35,7 +35,7 @@ interface MassanoLogoProps {
 }
 
 export function MassanoLogo({
-  variant  = "dark",
+  variant  = "gold",
   size     = "md",
   className,
   priority = false,
