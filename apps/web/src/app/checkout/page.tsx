@@ -121,8 +121,8 @@ export default function CheckoutPage() {
             Tu pedido
           </h2>
           <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
-            {items.map(({ product, quantity }) => (
-              <div key={product.id} className="flex items-center gap-3 px-4 py-3">
+            {items.map(({ product, quantity, customization }, idx) => (
+              <div key={`${product.id}-${idx}`} className="flex items-start gap-3 px-4 py-3">
                 {product.image_url && (
                   <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
                     <Image
@@ -135,8 +135,17 @@ export default function CheckoutPage() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium line-clamp-1">{product.name}</p>
-                  <p className="text-xs text-muted-foreground">×{quantity}</p>
+                  <p className="text-sm font-medium">{product.name}</p>
+                  {customization && (
+                    <div className="text-xs text-muted-foreground space-y-0.5 mt-1">
+                      {customization.size && <p>• Tamaño: {customization.size}</p>}
+                      {customization.temperature && <p>• Temperatura: {customization.temperature}</p>}
+                      {customization.sugar !== undefined && <p>• Azúcar: {customization.sugar ? 'Con' : 'Sin'}</p>}
+                      {customization.mayonnaise !== undefined && <p>• Mayonesa: {customization.mayonnaise ? 'Con' : 'Sin'}</p>}
+                      {customization.notes && <p>• Notas: {customization.notes}</p>}
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-1">×{quantity}</p>
                 </div>
                 <p className="text-sm font-semibold flex-shrink-0">
                   {formatPrice(product.price * quantity)}
