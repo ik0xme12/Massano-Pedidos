@@ -120,18 +120,9 @@ export function CartDrawer() {
         {/* Footer */}
         {items.length > 0 && (
           <div className="border-t border-border px-5 py-5 space-y-3 bg-card">
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>Subtotal</span>
-              <span>{formatPrice(totalPrice())}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>Envío</span>
-              <span>{formatPrice(600)}</span>
-            </div>
-            <div className="h-px bg-border" />
             <div className="flex items-center justify-between font-semibold">
               <span>Total</span>
-              <span className="text-lg">{formatPrice(totalPrice() + 600)}</span>
+              <span className="text-lg">{formatPrice(totalPrice())}</span>
             </div>
             <Link href="/checkout" onClick={closeCart} className="block">
               <Button variant="black" size="lg" className="w-full">

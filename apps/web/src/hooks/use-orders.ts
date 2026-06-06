@@ -22,7 +22,7 @@ export function useSaveOrder() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user?.id) throw new Error('Usuario no autenticado')
 
-      const total = items.reduce((sum, item) => sum + (item.product.price ?? 0) * item.quantity, 0) + 600
+      const total = items.reduce((sum, item) => sum + (item.product.price ?? 0) * item.quantity, 0)
 
       const order = await orderService.create({
         user_id: user.id,

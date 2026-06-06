@@ -182,10 +182,6 @@ export default function Home() {
               <span>{formatDeliveryTime(20, 35)}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Truck className="h-4 w-4 text-gold" />
-              <span>Envío {formatPrice(600)}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
               <Star className="h-4 w-4 text-gold fill-gold" />
               <span>4.9 · 318 reseñas</span>
             </div>

@@ -42,8 +42,7 @@ export default function CheckoutPage() {
   }, [user, authLoading, loginModal])
 
   const subtotal = totalPrice()
-  const delivery = 600
-  const total    = subtotal + delivery
+  const total    = subtotal
 
   async function handleConfirm() {
     if (!address.trim()) return
@@ -210,15 +209,6 @@ export default function CheckoutPage() {
 
         {/* Resumen de precios */}
         <section className="bg-card border border-border rounded-xl px-4 py-4 space-y-2">
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Subtotal</span>
-            <span>{formatPrice(subtotal)}</span>
-          </div>
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Envío</span>
-            <span>{formatPrice(delivery)}</span>
-          </div>
-          <div className="h-px bg-border" />
           <div className="flex justify-between font-semibold text-base">
             <span>Total</span>
             <span>{formatPrice(total)}</span>
