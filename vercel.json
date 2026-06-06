@@ -2,6 +2,7 @@
   "version": 2,
   "buildCommand": "pnpm install && pnpm -F web build",
   "installCommand": "pnpm install",
+  "nodeVersion": "20.x",
   "builds": [
     {
       "src": "apps/web/package.json",
