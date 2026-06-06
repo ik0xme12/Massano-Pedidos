@@ -12,10 +12,26 @@ export function useOrderSubscription(orderId: string) {
   useEffect(() => {
     if (!orderId) return
 
+    setLoading(true)
+    let hasData = false
+
+    // Try to load from localStorage first (fastest)
+    try {
+      const stored = localStorage.getItem(`order-${orderId}`)
+      if (stored) {
+        const storedOrder = JSON.parse(stored)
+        setOrder(storedOrder as Order)
+        hasData = true
+        console.log('Loaded order from localStorage:', storedOrder)
+      }
+    } catch (err) {
+      console.error('Error loading from localStorage:', err)
+    }
+
+    // Then try Supabase
     const fetchOrder = async () => {
       try {
-        setLoading(true)
-        console.log('Fetching order:', orderId)
+        console.log('Fetching order from Supabase:', orderId)
         const { data, error: fetchError } = await supabase
           .from('orders')
           .select('*')
@@ -24,7 +40,29 @@ export function useOrderSubscription(orderId: string) {
 
         if (fetchError) {
           console.error('Supabase error:', fetchError)
-          // Demo data when Supabase is not available
+          if (!hasData) {
+            // Demo data when Supabase is not available and no localStorage
+            const demoOrder = {
+              id: orderId,
+              status: 'pending' as const,
+              total: 2500,
+              user_id: 'demo',
+              delivery_address: 'Demo Address',
+              payment_method: 'cash',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            } as Order
+            setOrder(demoOrder)
+          }
+          setLoading(false)
+          return
+        }
+        console.log('Order loaded from Supabase:', data)
+        setOrder(data as Order)
+      } catch (err) {
+        console.error('Catch error:', err)
+        if (!hasData) {
+          // Demo fallback on error
           const demoOrder = {
             id: orderId,
             status: 'pending' as const,
@@ -36,42 +74,13 @@ export function useOrderSubscription(orderId: string) {
             updated_at: new Date().toISOString(),
           } as Order
           setOrder(demoOrder)
-          setLoading(false)
-          return
         }
-        console.log('Order loaded:', data)
-        setOrder(data as Order)
-      } catch (err) {
-        console.error('Catch error:', err)
-        // Demo fallback on error
-        const demoOrder = {
-          id: orderId,
-          status: 'pending' as const,
-          total: 2500,
-          user_id: 'demo',
-          delivery_address: 'Demo Address',
-          payment_method: 'cash',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        } as Order
-        setOrder(demoOrder)
       } finally {
         setLoading(false)
       }
     }
 
     fetchOrder()
-
-    // Try to load from localStorage as immediate fallback
-    try {
-      const stored = localStorage.getItem(`order-${orderId}`)
-      if (stored) {
-        const storedOrder = JSON.parse(stored)
-        setOrder(storedOrder as Order)
-      }
-    } catch (err) {
-      console.error('Error loading from localStorage:', err)
-    }
 
     // Subscribe to real-time changes
     const subscription = supabase
