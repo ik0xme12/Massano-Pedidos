@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm install && pnpm -F web build",
-  "installCommand": "pnpm install",
+  "buildCommand": "npm install && npm run build -w apps/web",
+  "installCommand": "npm install",
   "nodeVersion": "20.x",
   "builds": [
     {
