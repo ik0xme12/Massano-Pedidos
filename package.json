@@ -4,7 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "web": "pnpm --filter web dev",
-    "mobile": "pnpm --filter mobile start"
+    "mobile": "pnpm --filter mobile start",
+    "build": "cd apps/web && npm run build"
   },
-  "packageManager": "pnpm@9.0.0"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@latest"
 }
