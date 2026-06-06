@@ -7,6 +7,7 @@ import { Button } from "@/components/ds"
 import { CartDrawer } from "@/components/cart/CartDrawer"
 import { LoginModal } from "@/components/auth/LoginModal"
 import { SearchBar } from "@/components/search/SearchBar"
+import { CategoryFilter } from "@/components/search/CategoryFilter"
 import { FilterBar } from "@/components/search/FilterBar"
 import { CustomizeModal, type ProductCustomization } from "@/components/products/CustomizeModal"
 import { useCartStore } from "@/store/cart"
@@ -199,22 +200,12 @@ export default function Home() {
         <div className="mx-auto max-w-2xl px-5 py-4 space-y-4">
           <SearchBar onSearch={setSearchQuery} />
 
-          <div className="flex gap-4 items-center justify-between">
-            <div className="flex gap-1 overflow-x-auto py-2 scrollbar-none flex-1">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === cat
-                      ? "bg-brand-black text-white"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+          <div className="flex gap-3 items-center justify-between">
+            <CategoryFilter
+              categories={CATEGORIES}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
             <FilterBar sortBy={sortBy} onSortChange={setSortBy} />
           </div>
         </div>

@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@base-ui/react": "^1.5.0",
     "@mercadopago/sdk-js": "^0.0.3",
     "@supabase/supabase-js": "^2.107.0",
     "class-variance-authority": "^0.7.1",
@@ -28,6 +29,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
+    "playwright": "^1.60.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
