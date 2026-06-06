@@ -1,6 +1,6 @@
 'use client'
 
-import { MassanoLogo } from "@/components/brand/MassanoLogo"
+import Image from "next/image"
 import { Button } from "@/components/ds"
 import { CheckCircle, Clock } from "lucide-react"
 import Link from "next/link"
@@ -13,7 +13,16 @@ export function PedidoConfirmadoContent() {
   return (
     <div className="min-h-screen bg-olive flex flex-col items-center justify-center px-5 text-white">
       <div className="max-w-sm w-full text-center space-y-6">
-        <MassanoLogo variant="white" size="md" className="mx-auto" />
+        <Image
+          src="/massano5.png"
+          alt="Massano Cafetería"
+          width={220}
+          height={80}
+          className="object-contain mx-auto"
+          style={{
+            filter: "brightness(0) saturate(100%) invert(1)",
+          }}
+        />
 
         <div className="flex items-center justify-center">
           <CheckCircle className="h-16 w-16 text-gold" strokeWidth={1.5} />
