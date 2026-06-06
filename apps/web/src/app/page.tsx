@@ -7,7 +7,7 @@ import { Button } from "@/components/ds"
 import { CartDrawer } from "@/components/cart/CartDrawer"
 import { LoginModal } from "@/components/auth/LoginModal"
 import { SearchBar } from "@/components/search/SearchBar"
-import { CategoryFilter } from "@/components/search/CategoryFilter"
+import { CategoryModal } from "@/components/search/CategoryModal"
 import { FilterBar } from "@/components/search/FilterBar"
 import { CustomizeModal, type ProductCustomization } from "@/components/products/CustomizeModal"
 import { useCartStore } from "@/store/cart"
@@ -17,7 +17,7 @@ import { useLoginModal } from "@/hooks/use-login-modal"
 import { useProductCustomizations } from "@/hooks/use-product-customizations"
 import { formatDeliveryTime, formatPrice } from "@/lib/utils"
 import { productSearch } from "@/lib/product-search"
-import { Clock, ShoppingBag, Star, Truck, LogOut } from "lucide-react"
+import { Clock, ShoppingBag, Star, Truck, LogOut, Sliders } from "lucide-react"
 import type { Product } from "@shared/types"
 
 const CATEGORIES = [
@@ -46,6 +46,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("Todo")
   const [sortBy, setSortBy] = useState<"name" | "price-asc" | "price-desc" | "newest">("newest")
   const [customizeProduct, setCustomizeProduct] = useState<Product | null>(null)
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
 
   const { add, totalItems, toggleCart, items } = useCartStore()
   const { products, loading, error } = useProducts()
@@ -201,15 +202,28 @@ export default function Home() {
           <SearchBar onSearch={setSearchQuery} />
 
           <div className="flex gap-3 items-center justify-between">
-            <CategoryFilter
-              categories={CATEGORIES}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-            />
+            <button
+              onClick={() => setIsCategoryModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-foreground hover:border-gold/50 focus:border-gold focus:ring-1 focus:ring-gold/20 transition-colors outline-none"
+            >
+              <Sliders className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {selectedCategory === "Todo" ? "Categorías" : selectedCategory}
+              </span>
+            </button>
             <FilterBar sortBy={sortBy} onSortChange={setSortBy} />
           </div>
         </div>
       </section>
+
+      {/* ── Category Modal ── */}
+      <CategoryModal
+        isOpen={isCategoryModalOpen}
+        categories={CATEGORIES}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        onClose={() => setIsCategoryModalOpen(false)}
+      />
 
       {/* ── Menú ── */}
       <main className="mx-auto max-w-2xl px-5 py-8">
