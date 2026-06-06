@@ -2,7 +2,6 @@
   "version": 2,
   "buildCommand": "cd apps/web && npm run build",
   "installCommand": "npm install",
-  "nodeVersion": "20.x",
   "builds": [
     {
       "src": "apps/web/package.json",
