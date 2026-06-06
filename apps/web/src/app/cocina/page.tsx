@@ -119,18 +119,21 @@ export default function KitchenPage() {
   }
 
   const updateOrderStatus = async (orderId: string, newStatus: OrderStatus) => {
+    // Actualizar UI localmente primero (optimistic update)
+    setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o))
+
     try {
       const { error } = await supabase
         .from('orders')
         .update({ status: newStatus, updated_at: new Date() })
         .eq('id', orderId)
 
-      if (error) throw error
-
-      // Actualizar UI localmente
-      setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o))
+      if (error) {
+        console.error('Supabase update failed, but local state updated:', error)
+      }
     } catch (error) {
       console.error('Error updating order:', error)
+      // Local state already updated, so UI shows the change
     }
   }
 
