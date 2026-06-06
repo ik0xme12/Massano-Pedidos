@@ -120,7 +120,20 @@ export default function KitchenPage() {
 
   const updateOrderStatus = async (orderId: string, newStatus: OrderStatus) => {
     // Actualizar UI localmente primero (optimistic update)
-    setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o))
+    const updatedOrders = orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o)
+    setOrders(updatedOrders)
+
+    // Guardar en localStorage para sincronización entre páginas
+    try {
+      const orderToSave = updatedOrders.find(o => o.id === orderId)
+      if (orderToSave) {
+        localStorage.setItem(`order-${orderId}`, JSON.stringify(orderToSave))
+        // Disparar evento para notificar a otros tabs/componentes
+        window.dispatchEvent(new CustomEvent('order-updated', { detail: orderToSave }))
+      }
+    } catch (err) {
+      console.error('Error saving to localStorage:', err)
+    }
 
     try {
       const { error } = await supabase
