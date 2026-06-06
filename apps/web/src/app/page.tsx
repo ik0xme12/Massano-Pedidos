@@ -8,13 +8,16 @@ import { CartDrawer } from "@/components/cart/CartDrawer"
 import { LoginModal } from "@/components/auth/LoginModal"
 import { SearchBar } from "@/components/search/SearchBar"
 import { FilterBar } from "@/components/search/FilterBar"
+import { CustomizeModal, type ProductCustomization } from "@/components/products/CustomizeModal"
 import { useCartStore } from "@/store/cart"
 import { useProducts } from "@/hooks/use-products"
 import { useAuth } from "@/contexts/auth-context"
 import { useLoginModal } from "@/hooks/use-login-modal"
+import { useProductCustomizations } from "@/hooks/use-product-customizations"
 import { formatDeliveryTime, formatPrice } from "@/lib/utils"
 import { productSearch } from "@/lib/product-search"
 import { Clock, ShoppingBag, Star, Truck, LogOut } from "lucide-react"
+import type { Product } from "@shared/types"
 
 const CATEGORIES = ["Todo", "Desayunos", "Almuerzos", "Cafetería", "Postres", "Bebidas"]
 
@@ -22,14 +25,51 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Todo")
   const [sortBy, setSortBy] = useState<"name" | "price-asc" | "price-desc" | "newest">("newest")
+  const [customizeProduct, setCustomizeProduct] = useState<Product | null>(null)
+  const [lastCustomization, setLastCustomization] = useState<ProductCustomization | null>(null)
 
   const { add, totalItems, toggleCart, items } = useCartStore()
   const { products, loading, error } = useProducts()
   const { user, signOut } = useAuth()
   const loginModal = useLoginModal()
+  const { saveCustomization, getCustomization } = useProductCustomizations()
 
   const getQuantity = (id: string) =>
     items.find((i) => i.product.id === id)?.quantity ?? 0
+
+  const needsCustomization = (product: Product): boolean => {
+    const name = product.name?.toLowerCase() || ""
+    const category = product.category?.toLowerCase() || ""
+    return name.includes('café') || name.includes('café') || category === 'bebidas' ||
+           name.includes('sándwich') || category === 'sándwiches'
+  }
+
+  const handleAddProduct = async (product: Product) => {
+    if (needsCustomization(product)) {
+      setCustomizeProduct(product)
+      if (user) {
+        const saved = await getCustomization(user.id, product.id)
+        setLastCustomization(saved)
+      }
+    } else {
+      add(product as any)
+    }
+  }
+
+  const handleConfirmCustomization = async (customization: ProductCustomization) => {
+    if (customizeProduct) {
+      add(customizeProduct as any, customization)
+      if (user) {
+        try {
+          await saveCustomization(user.id, customizeProduct.id, customization)
+          setLastCustomization(customization)
+        } catch (err) {
+          console.error('Error saving customization:', err)
+        }
+      }
+      setCustomizeProduct(null)
+    }
+  }
 
   const displayProducts = loading
     ? []
@@ -46,6 +86,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <CartDrawer />
+
+      {customizeProduct && (
+        <CustomizeModal
+          isOpen={!!customizeProduct}
+          productName={customizeProduct.name}
+          productCategory={customizeProduct.category}
+          onClose={() => setCustomizeProduct(null)}
+          onConfirm={handleConfirmCustomization}
+        />
+      )}
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-30 bg-white border-b border-border">
@@ -218,7 +268,7 @@ export default function Home() {
 
                     {qty === 0 ? (
                       <button
-                        onClick={() => add(product as any)}
+                        onClick={() => handleAddProduct(product)}
                         className="border border-brand-black rounded-full px-4 py-1.5 text-xs font-medium hover:bg-brand-black hover:text-white transition-colors"
                       >
                         + Agregar
