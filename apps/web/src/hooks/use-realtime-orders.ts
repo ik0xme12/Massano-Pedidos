@@ -62,6 +62,17 @@ export function useOrderSubscription(orderId: string) {
 
     fetchOrder()
 
+    // Try to load from localStorage as immediate fallback
+    try {
+      const stored = localStorage.getItem(`order-${orderId}`)
+      if (stored) {
+        const storedOrder = JSON.parse(stored)
+        setOrder(storedOrder as Order)
+      }
+    } catch (err) {
+      console.error('Error loading from localStorage:', err)
+    }
+
     // Subscribe to real-time changes
     const subscription = supabase
       .channel(`order:${orderId}`)
