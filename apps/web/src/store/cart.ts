@@ -1,12 +1,14 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import type { Product } from "@shared/types"
+import type { ProductCustomization } from "@/components/products/CustomizeModal"
 
 export type CartProduct = Pick<Product, "id" | "name" | "price" | "image_url" | "category">
 
 export interface CartItem {
   product: CartProduct
   quantity: number
+  customization?: ProductCustomization
 }
 
 interface CartStore {
@@ -14,10 +16,10 @@ interface CartStore {
   isOpen: boolean
 
   // actions
-  add:        (product: CartProduct) => void
-  remove:     (productId: string) => void
-  increment:  (productId: string) => void
-  decrement:  (productId: string) => void
+  add:        (product: CartProduct, customization?: ProductCustomization) => void
+  remove:     (productId: string, customizationKey?: string) => void
+  increment:  (productId: string, customizationKey?: string) => void
+  decrement:  (productId: string, customizationKey?: string) => void
   clear:      () => void
   openCart:   () => void
   closeCart:  () => void
@@ -28,43 +30,63 @@ interface CartStore {
   totalPrice:  () => number
 }
 
+const getItemKey = (productId: string, customization?: ProductCustomization): string => {
+  return customization
+    ? `${productId}-${JSON.stringify(customization)}`
+    : productId
+}
+
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
       isOpen: false,
 
-      add: (product) => {
-        const existing = get().items.find((i) => i.product.id === product.id)
+      add: (product, customization) => {
+        const itemKey = getItemKey(product.id, customization)
+        const existing = get().items.find((i) =>
+          i.product.id === product.id &&
+          JSON.stringify(i.customization) === JSON.stringify(customization)
+        )
+
         if (existing) {
           set({ items: get().items.map((i) =>
-            i.product.id === product.id
+            i.product.id === product.id &&
+            JSON.stringify(i.customization) === JSON.stringify(customization)
               ? { ...i, quantity: i.quantity + 1 }
               : i
           )})
         } else {
-          set({ items: [...get().items, { product, quantity: 1 }] })
+          set({ items: [...get().items, { product, quantity: 1, customization }] })
         }
       },
 
-      remove: (productId) =>
-        set({ items: get().items.filter((i) => i.product.id !== productId) }),
+      remove: (productId, customizationKey) =>
+        set({ items: get().items.filter((i) =>
+          !(i.product.id === productId &&
+            JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined))
+        )}),
 
-      increment: (productId) =>
+      increment: (productId, customizationKey) =>
         set({ items: get().items.map((i) =>
-          i.product.id === productId
+          i.product.id === productId &&
+          JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined)
             ? { ...i, quantity: i.quantity + 1 }
             : i
         )}),
 
-      decrement: (productId) => {
-        const item = get().items.find((i) => i.product.id === productId)
+      decrement: (productId, customizationKey) => {
+        const item = get().items.find((i) =>
+          i.product.id === productId &&
+          JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined)
+        )
         if (!item) return
         if (item.quantity === 1) {
-          get().remove(productId)
+          get().remove(productId, customizationKey)
         } else {
           set({ items: get().items.map((i) =>
-            i.product.id === productId
+            i.product.id === productId &&
+            JSON.stringify(i.customization) === JSON.stringify(customizationKey ? JSON.parse(customizationKey) : undefined)
               ? { ...i, quantity: i.quantity - 1 }
               : i
           )})
