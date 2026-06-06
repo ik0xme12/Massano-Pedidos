@@ -1,11 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "root": "apps/web",
   "builds": [
     {
-      "src": "package.json",
+      "src": "apps/web/package.json",
       "use": "@vercel/next@latest",
       "config": {
         "maxLambdaSize": "50mb"
@@ -15,7 +12,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "apps/web/$1"
     }
   ]
 }
