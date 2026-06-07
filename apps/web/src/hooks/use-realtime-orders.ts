@@ -14,16 +14,15 @@ export function useOrderSubscription(orderId: string) {
     if (!orderId) return
 
     setLoading(true)
-    let hasData = false
+    let localStorageData: Order | null = null
 
     // Try to load from localStorage first (fastest)
     try {
       const stored = localStorage.getItem(`order-${orderId}`)
       if (stored) {
-        const storedOrder = JSON.parse(stored)
-        setOrder(storedOrder as Order)
-        hasData = true
-        console.log('Loaded order from localStorage:', storedOrder)
+        localStorageData = JSON.parse(stored) as Order
+        setOrder(localStorageData)
+        console.log('Loaded order from localStorage:', localStorageData)
       }
     } catch (err) {
       console.error('Error loading from localStorage:', err)
@@ -41,7 +40,7 @@ export function useOrderSubscription(orderId: string) {
 
         if (fetchError) {
           console.error('Supabase error:', fetchError)
-          if (!hasData) {
+          if (!localStorageData) {
             // Demo data when Supabase is not available and no localStorage
             const demoOrder = {
               id: orderId,
@@ -59,7 +58,21 @@ export function useOrderSubscription(orderId: string) {
           return
         }
         console.log('Order loaded from Supabase:', data)
-        setOrder(data as Order)
+
+        // Compare timestamps: only update if Supabase is newer
+        if (localStorageData) {
+          const supabaseTime = new Date(data?.updated_at || 0).getTime()
+          const localTime = new Date(localStorageData.updated_at || 0).getTime()
+          if (supabaseTime > localTime) {
+            console.log('Supabase data is newer, updating from Supabase')
+            setOrder(data as Order)
+          } else {
+            console.log('Local data is newer or same, keeping localStorage version')
+          }
+        } else {
+          // No local data, use Supabase
+          setOrder(data as Order)
+        }
       } catch (err) {
         console.error('Catch error:', err)
         if (!hasData) {
