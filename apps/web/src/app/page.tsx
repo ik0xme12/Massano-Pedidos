@@ -163,38 +163,67 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <section className="bg-olive text-white overflow-hidden">
-        <div className="mx-auto max-w-2xl px-5 pt-10 pb-14">
-          <Image
-            src="/massano5.png"
-            alt="Massano Cafetería"
-            width={280}
-            height={100}
-            priority
-            className="object-contain mb-4"
-            style={{
-              filter: "brightness(0) saturate(100%) invert(69%) sepia(28%) saturate(550%) hue-rotate(4deg) brightness(80%)",
-            }}
-          />
-          <h1 className="font-display text-4xl font-bold leading-tight mb-4 text-white">
-            Tu pan y café favoritos,<br />
-            <span className="text-gold">en tu puerta.</span>
-          </h1>
-          <p className="text-white/70 text-base leading-relaxed mb-8 max-w-sm">
-            Ordena tus favoritos de la cafetería y recíbelos frescos en minutos.
-          </p>
-          <div className="flex flex-wrap items-center gap-4 mb-8 text-sm text-white/60">
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-gold" />
-              <span>{formatDeliveryTime(20, 35)}</span>
+        <div className="mx-auto max-w-2xl px-5 pt-6 pb-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="flex-1">
+              <Image
+                src="/massano5.png"
+                alt="Massano Cafetería"
+                width={160}
+                height={60}
+                priority
+                className="object-contain mb-3"
+                style={{
+                  filter: "brightness(0) saturate(100%) invert(69%) sepia(28%) saturate(550%) hue-rotate(4deg) brightness(80%)",
+                }}
+              />
+              <h1 className="font-display text-3xl font-bold leading-tight mb-2 text-white">
+                Tu pan y café favoritos,<br />
+                <span className="text-gold">en tu puerta.</span>
+              </h1>
+              <p className="text-white/70 text-sm leading-relaxed mb-4 max-w-sm">
+                Ordena tus favoritos de la cafetería y recíbelos frescos en minutos.
+              </p>
+              <div className="flex flex-wrap items-center gap-3 mb-4 text-xs text-white/60">
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3 w-3 text-gold" />
+                  <span>{formatDeliveryTime(20, 35)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="h-3 w-3 text-gold fill-gold" />
+                  <span>4.9 · 318 reseñas</span>
+                </div>
+              </div>
+              <Button variant="gold" size="sm" onClick={toggleCart}>
+                Ver mi pedido
+              </Button>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Star className="h-4 w-4 text-gold fill-gold" />
-              <span>4.9 · 318 reseñas</span>
-            </div>
+
+            {/* Carrusel de Productos */}
+            {products.length > 0 && (
+              <div className="flex-shrink-0 w-32">
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                  {products.slice(0, 6).map((product) => (
+                    <div key={product.id} className="flex-shrink-0 w-28 h-28">
+                      {product.image_url ? (
+                        <Image
+                          src={product.image_url}
+                          alt={product.name}
+                          width={112}
+                          height={112}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-white/10 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-white/40">Sin imagen</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <Button variant="gold" size="lg" onClick={toggleCart}>
-            Ver mi pedido
-          </Button>
         </div>
       </section>
 
