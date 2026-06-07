@@ -15,6 +15,7 @@ import { useProducts } from "@/hooks/use-products"
 import { useAuth } from "@/contexts/auth-context"
 import { useLoginModal } from "@/hooks/use-login-modal"
 import { useProductCustomizations } from "@/hooks/use-product-customizations"
+import { useUserMostOrdered } from "@/hooks/use-user-most-ordered"
 import { formatDeliveryTime, formatPrice } from "@/lib/utils"
 import { productSearch } from "@/lib/product-search"
 import { Clock, ShoppingBag, Star, Truck, LogOut, Sliders } from "lucide-react"
@@ -53,6 +54,11 @@ export default function Home() {
   const { user, signOut } = useAuth()
   const loginModal = useLoginModal()
   const { saveCustomization } = useProductCustomizations()
+  const { product: mostOrderedProduct } = useUserMostOrdered(user?.id)
+
+  // Get products by category
+  const seasonalSandwiches = products.filter(p => p.category === 'Sándwiches de Temporada')
+  const seasonalBeverages = products.filter(p => p.category === 'Bebidas de Temporada')
 
   const getQuantity = (id: string) =>
     items.find((i) => i.product.id === id)?.quantity ?? 0
@@ -220,6 +226,122 @@ export default function Home() {
         onSelectCategory={setSelectedCategory}
         onClose={() => setIsCategoryModalOpen(false)}
       />
+
+      {/* ── Producto Más Pedido ── */}
+      {user && mostOrderedProduct && (
+        <section className="mx-auto max-w-2xl px-5 py-8 border-b border-border">
+          <h2 className="font-display text-xl font-semibold mb-4">Tu favorito</h2>
+          <div className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div className="flex gap-4">
+              {mostOrderedProduct.image_url && (
+                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                  <Image
+                    src={mostOrderedProduct.image_url}
+                    alt={mostOrderedProduct.name}
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground">{mostOrderedProduct.name}</h3>
+                {mostOrderedProduct.description && (
+                  <p className="text-sm text-muted-foreground mb-3">{mostOrderedProduct.description}</p>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-lg text-gold">{formatPrice(mostOrderedProduct.price)}</span>
+                  <Button
+                    variant="gold"
+                    size="sm"
+                    onClick={() => handleAddProduct(mostOrderedProduct)}
+                  >
+                    Agregar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Sándwiches de Temporada ── */}
+      {seasonalSandwiches.length > 0 && (
+        <section className="mx-auto max-w-2xl px-5 py-8 border-b border-border">
+          <h2 className="font-display text-xl font-semibold mb-4">Sándwiches de Temporada</h2>
+          <div className="grid grid-cols-1 gap-4">
+            {seasonalSandwiches.slice(0, 3).map(product => (
+              <div key={product.id} className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="flex gap-4">
+                  {product.image_url && (
+                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                      <Image
+                        src={product.image_url}
+                        alt={product.name}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground">{product.name}</h3>
+                    {product.description && (
+                      <p className="text-sm text-muted-foreground mb-3">{product.description}</p>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-lg text-gold">{formatPrice(product.price)}</span>
+                      <Button
+                        variant="gold"
+                        size="sm"
+                        onClick={() => handleAddProduct(product)}
+                      >
+                        {getQuantity(product.id) > 0 ? `${getQuantity(product.id)} en carrito` : 'Agregar'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Bebidas de Temporada ── */}
+      {seasonalBeverages.length > 0 && (
+        <section className="mx-auto max-w-2xl px-5 py-8 border-b border-border">
+          <h2 className="font-display text-xl font-semibold mb-4">Bebidas de Temporada</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {seasonalBeverages.slice(0, 4).map(product => (
+              <div key={product.id} className="bg-card border border-border rounded-lg p-3 hover:shadow-md transition-shadow">
+                {product.image_url && (
+                  <div className="w-full h-24 rounded-lg overflow-hidden mb-2">
+                    <Image
+                      src={product.image_url}
+                      alt={product.name}
+                      width={120}
+                      height={100}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <h3 className="font-semibold text-sm text-foreground mb-1">{product.name}</h3>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-gold text-sm">{formatPrice(product.price)}</span>
+                  <Button
+                    variant="gold"
+                    size="sm"
+                    onClick={() => handleAddProduct(product)}
+                    className="text-xs px-2"
+                  >
+                    {getQuantity(product.id) > 0 ? `${getQuantity(product.id)}` : '+'}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Menú ── */}
       <main className="mx-auto max-w-2xl px-5 py-8">
