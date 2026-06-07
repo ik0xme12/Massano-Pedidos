@@ -203,19 +203,17 @@ export default function Home() {
             <div className="flex-shrink-0 w-32">
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
                 {[
-                  { name: 'Café', url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b3f7?w=200&h=200&fit=crop' },
-                  { name: 'Pan', url: 'https://images.unsplash.com/photo-1586985289688-cacf609b4f6b?w=200&h=200&fit=crop' },
-                  { name: 'Pastel', url: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&h=200&fit=crop' },
-                  { name: 'Sándwich', url: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop' },
-                  { name: 'Galletas', url: 'https://images.unsplash.com/photo-1599599810694-b5ac4dd64718?w=200&h=200&fit=crop' },
-                  { name: 'Bebida', url: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=200&h=200&fit=crop' },
+                  { name: 'Café', url: 'https://picsum.photos/112/112?random=1' },
+                  { name: 'Pan', url: 'https://picsum.photos/112/112?random=2' },
+                  { name: 'Pastel', url: 'https://picsum.photos/112/112?random=3' },
+                  { name: 'Sándwich', url: 'https://picsum.photos/112/112?random=4' },
+                  { name: 'Galletas', url: 'https://picsum.photos/112/112?random=5' },
+                  { name: 'Bebida', url: 'https://picsum.photos/112/112?random=6' },
                 ].map((item) => (
                   <div key={item.name} className="flex-shrink-0 w-28 h-28">
-                    <Image
+                    <img
                       src={item.url}
                       alt={item.name}
-                      width={112}
-                      height={112}
                       className="w-full h-full object-cover rounded-lg"
                     />
                   </div>
