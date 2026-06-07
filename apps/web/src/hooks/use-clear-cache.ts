@@ -21,7 +21,9 @@ export function useClearCache() {
       if ('indexedDB' in window) {
         const databases = await indexedDB.databases()
         for (const db of databases) {
-          indexedDB.deleteDatabase(db.name)
+          if (db.name) {
+            indexedDB.deleteDatabase(db.name)
+          }
         }
       }
 
