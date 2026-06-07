@@ -10,6 +10,7 @@ export function useOrderSubscription(orderId: string) {
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
+    console.log('useOrderSubscription hook running for orderId:', orderId)
     if (!orderId) return
 
     setLoading(true)
