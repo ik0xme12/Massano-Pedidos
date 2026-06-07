@@ -64,6 +64,25 @@ export default function KitchenPage() {
   }, [router])
 
   const loadOrders = async () => {
+    // First try to load from localStorage to get latest kitchen updates
+    const localOrdersCache = new Map<string, any>()
+    try {
+      // Scan localStorage for any order- keys
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key?.startsWith('order-')) {
+          const stored = localStorage.getItem(key)
+          if (stored) {
+            const order = JSON.parse(stored)
+            localOrdersCache.set(order.id, order)
+            console.log('Loaded order from localStorage:', order.id, order.status)
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error loading from localStorage:', err)
+    }
+
     // Demo data when Supabase is not configured
     const demoOrders = [
       {
@@ -99,7 +118,21 @@ export default function KitchenPage() {
       if (error) throw error
       if (data && data.length > 0) {
         console.log('Orders loaded from Supabase:', data)
-        setOrders(data)
+        // Merge with localStorage cache to get latest kitchen updates
+        const mergedOrders = data.map(order => {
+          const cachedVersion = localOrdersCache.get(order.id)
+          if (cachedVersion) {
+            // Use cached version if it's newer
+            const supabaseTime = new Date(order.updated_at || 0).getTime()
+            const cachedTime = new Date(cachedVersion.updated_at || 0).getTime()
+            if (cachedTime > supabaseTime) {
+              console.log('Using cached version for order:', order.id, cachedVersion.status)
+              return cachedVersion
+            }
+          }
+          return order
+        })
+        setOrders(mergedOrders)
       } else {
         console.log('No orders in Supabase, showing demo data')
         setOrders(demoOrders)
