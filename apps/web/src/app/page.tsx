@@ -369,59 +369,57 @@ export default function Home() {
           </p>
         )}
 
-        <div className="flex flex-col divide-y divide-border">
+        <div className="space-y-4">
           {displayProducts.map((product) => {
             const qty = getQuantity(product.id)
             return (
-              <article key={product.id} className="flex items-start gap-4 py-6 group">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[11px] text-muted-foreground uppercase tracking-wider">
-                      {product.category}
-                    </span>
-                    {product.badge && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gold/15 text-gold-dark border border-gold/20">
-                        {product.badge}
-                      </span>
+              <article key={product.id} className="bg-white border border-border rounded-xl p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-foreground mb-2">
+                      {product.name}
+                    </h3>
+                    {product.description && (
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{product.description}</p>
                     )}
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-bold text-gold">{formatPrice(product.price)}</span>
+                    </div>
                   </div>
-                  <h3 className="font-display text-base font-semibold mb-3 leading-snug">
-                    {product.name}
-                  </h3>
-                  {product.description && (
-                    <p className="text-xs text-muted-foreground mb-2">{product.description}</p>
-                  )}
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold">{formatPrice(product.price)}</span>
 
+                  <div className="flex-shrink-0">
                     {qty === 0 ? (
-                      <button
+                      <Button
+                        variant="gold"
+                        size="sm"
                         onClick={() => handleAddProduct(product)}
-                        className="border border-brand-black rounded-full px-4 py-1.5 text-xs font-medium hover:bg-brand-black hover:text-white transition-colors"
+                        className="whitespace-nowrap"
                       >
-                        + Agregar
-                      </button>
+                        Agregar
+                      </Button>
                     ) : needsCustomization(product) ? (
-                      <button
+                      <Button
+                        variant="gold"
+                        size="sm"
                         onClick={toggleCart}
-                        className="border border-gold bg-gold/5 text-gold rounded-full px-4 py-1.5 text-xs font-medium hover:bg-gold/10 transition-colors"
+                        className="whitespace-nowrap"
                       >
                         {qty} en carrito
-                      </button>
+                      </Button>
                     ) : (
-                      <div className="flex items-center gap-2 border border-brand-black rounded-full px-2 py-1">
+                      <div className="flex items-center gap-2 border border-brand-black rounded-full">
                         <button
                           onClick={() => useCartStore.getState().decrement(product.id)}
-                          className="w-5 h-5 flex items-center justify-center font-bold text-sm leading-none"
+                          className="w-8 h-8 flex items-center justify-center font-bold"
                         >
                           −
                         </button>
-                        <span className="text-sm font-semibold w-4 text-center tabular-nums">
+                        <span className="text-sm font-semibold w-5 text-center tabular-nums">
                           {qty}
                         </span>
                         <button
                           onClick={() => useCartStore.getState().increment(product.id)}
-                          className="w-5 h-5 flex items-center justify-center font-bold text-sm leading-none"
+                          className="w-8 h-8 flex items-center justify-center font-bold"
                         >
                           +
                         </button>
@@ -429,17 +427,6 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-
-                {product.image_url && (
-                  <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-muted border border-border">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={product.image_url}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
-                )}
               </article>
             )
           })}
