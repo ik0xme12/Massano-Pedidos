@@ -120,8 +120,8 @@ export default function Home() {
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-30 bg-white border-b border-border">
-        <div className="mx-auto max-w-2xl px-5 h-20 flex items-center justify-between">
-          <MassanoLogo variant="dark" size="xs" priority />
+        <div className="mx-auto max-w-2xl px-5 h-24 flex items-center justify-between">
+          <MassanoLogo variant="dark" size="sm" priority />
           <div className="flex items-center gap-2">
             <button
               onClick={toggleCart}
