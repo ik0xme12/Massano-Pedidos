@@ -5,8 +5,9 @@ import { supabase } from '@/lib/supabase'
 import { MassanoLogo } from '@/components/brand/MassanoLogo'
 import { Button } from '@/components/ds'
 import { formatPrice, formatDeliveryTime } from '@/lib/utils'
-import { LogOut, Clock, ChefHat, CheckCircle2, Utensils } from 'lucide-react'
+import { LogOut, Clock, ChefHat, CheckCircle2, Utensils, RotateCw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useClearCache } from '@/hooks/use-clear-cache'
 import type { Order } from '@shared/types'
 
 type OrderStatus = 'pending' | 'preparing' | 'ready' | 'delivered'
@@ -26,6 +27,7 @@ const STATUS_ORDER: OrderStatus[] = ['pending', 'preparing', 'ready', 'delivered
 
 export default function KitchenPage() {
   const router = useRouter()
+  const { clearCache } = useClearCache()
   const [orders, setOrders] = useState<OrderWithItems[]>([])
   const [loading, setLoading] = useState(true)
   const [isKitchenStaff, setIsKitchenStaff] = useState(false)
@@ -186,12 +188,21 @@ export default function KitchenPage() {
             <ChefHat className="h-6 w-6 text-gold" />
             <h1 className="font-display text-lg font-bold">Panel de Cocina</h1>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="p-2 text-foreground hover:text-destructive transition-colors"
-          >
-            <LogOut className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={clearCache}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              title="Limpiar caché"
+            >
+              <RotateCw className="h-5 w-5" />
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="p-2 text-foreground hover:text-destructive transition-colors"
+            >
+              <LogOut className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </header>
 
