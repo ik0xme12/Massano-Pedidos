@@ -64,6 +64,31 @@ export default function KitchenPage() {
   }, [router])
 
   const loadOrders = async () => {
+    // Demo data when Supabase is not configured
+    const demoOrders = [
+      {
+        id: 'demo-001',
+        status: 'pending' as const,
+        created_at: new Date(Date.now() - 5 * 60000).toISOString(),
+        updated_at: new Date(Date.now() - 5 * 60000).toISOString(),
+        notes: null,
+        items: [
+          { quantity: 2, products: { name: 'Café Grande' }, customizations: { temperature: 'Caliente', sugar: true } },
+          { quantity: 1, products: { name: 'Pan de Chocolate' }, customizations: null }
+        ]
+      },
+      {
+        id: 'demo-002',
+        status: 'preparing' as const,
+        created_at: new Date(Date.now() - 10 * 60000).toISOString(),
+        updated_at: new Date(Date.now() - 10 * 60000).toISOString(),
+        notes: 'Sin cebolla',
+        items: [
+          { quantity: 1, products: { name: 'Sándwich con Mayo' }, customizations: { mayonnaise: true } }
+        ]
+      }
+    ] as any
+
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -72,35 +97,16 @@ export default function KitchenPage() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setOrders(data || [])
+      if (data && data.length > 0) {
+        console.log('Orders loaded from Supabase:', data)
+        setOrders(data)
+      } else {
+        console.log('No orders in Supabase, showing demo data')
+        setOrders(demoOrders)
+      }
     } catch (error) {
-      console.error('Error loading orders:', error)
-      console.log('Showing demo data instead')
-      // Demo data when Supabase is not configured
-      const demoOrders = [
-        {
-          id: 'demo-001',
-          status: 'pending',
-          created_at: new Date(Date.now() - 5 * 60000).toISOString(),
-          updated_at: new Date(Date.now() - 5 * 60000).toISOString(),
-          notes: null,
-          items: [
-            { quantity: 2, products: { name: 'Café Grande' }, customizations: { temperature: 'Caliente', sugar: true } },
-            { quantity: 1, products: { name: 'Pan de Chocolate' }, customizations: null }
-          ]
-        },
-        {
-          id: 'demo-002',
-          status: 'preparing',
-          created_at: new Date(Date.now() - 10 * 60000).toISOString(),
-          updated_at: new Date(Date.now() - 10 * 60000).toISOString(),
-          notes: 'Sin cebolla',
-          items: [
-            { quantity: 1, products: { name: 'Sándwich con Mayo' }, customizations: { mayonnaise: true } }
-          ]
-        }
-      ] as any
-      console.log('Setting demo orders:', demoOrders)
+      console.error('Error loading orders from Supabase:', error)
+      console.log('Using demo data instead')
       setOrders(demoOrders)
     }
   }
