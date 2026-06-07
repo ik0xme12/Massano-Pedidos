@@ -79,6 +79,8 @@ export default function KitchenPage() {
           id: 'demo-001',
           status: 'pending',
           created_at: new Date(Date.now() - 5 * 60000).toISOString(),
+          updated_at: new Date(Date.now() - 5 * 60000).toISOString(),
+          notes: null,
           items: [
             { quantity: 2, products: { name: 'Café Grande' }, customizations: { temperature: 'Caliente', sugar: true } },
             { quantity: 1, products: { name: 'Pan de Chocolate' }, customizations: null }
@@ -88,6 +90,8 @@ export default function KitchenPage() {
           id: 'demo-002',
           status: 'preparing',
           created_at: new Date(Date.now() - 10 * 60000).toISOString(),
+          updated_at: new Date(Date.now() - 10 * 60000).toISOString(),
+          notes: 'Sin cebolla',
           items: [
             { quantity: 1, products: { name: 'Sándwich con Mayo' }, customizations: { mayonnaise: true } }
           ]
