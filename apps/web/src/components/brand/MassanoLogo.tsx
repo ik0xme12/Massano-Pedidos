@@ -5,7 +5,7 @@ type LogoVariant = "dark" | "gold" | "white"
 type LogoSize    = "xs" | "sm" | "md" | "lg" | "xl"
 
 /*
- * Todos usan massano5.png (PNG con fondo transparente).
+ * Todos usan massano.png (PNG con fondo transparente).
  * El color se aplica con CSS filter:
  *   dark  → sin filtro (negro original)
  *   gold  → filtro que convierte negro → #C4A35A
@@ -46,7 +46,7 @@ export function MassanoLogo({
 
   return (
     <Image
-      src="/massano5.png"
+      src="/massano.png"
       alt="Massano Cafetería"
       width={w}
       height={h}
