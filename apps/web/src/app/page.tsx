@@ -257,7 +257,7 @@ export default function Home() {
       />
 
       {/* ── Tu Favorito (Carrusel) ── */}
-      {user && mostOrderedProduct && (
+      {user && mostOrderedProduct && selectedCategory === "Todo" && (
         <section className="mx-auto max-w-2xl px-5 py-4 border-b border-border">
           <h3 className="font-display text-sm font-semibold mb-3 text-gold">Tu favorito</h3>
           <div className="bg-card border border-border rounded-lg p-3 flex gap-3 hover:shadow-sm transition-shadow">
@@ -293,7 +293,7 @@ export default function Home() {
       )}
 
       {/* ── Sándwiches de Temporada (Carrusel) ── */}
-      {seasonalSandwiches.length > 0 && (
+      {seasonalSandwiches.length > 0 && selectedCategory === "Todo" && (
         <section className="mx-auto max-w-2xl px-5 py-4 border-b border-border">
           <h3 className="font-display text-sm font-semibold mb-3 text-gold">Sándwiches de Temporada</h3>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
@@ -329,7 +329,7 @@ export default function Home() {
       )}
 
       {/* ── Bebidas de Temporada (Carrusel) ── */}
-      {seasonalBeverages.length > 0 && (
+      {seasonalBeverages.length > 0 && selectedCategory === "Todo" && (
         <section className="mx-auto max-w-2xl px-5 py-4 border-b border-border">
           <h3 className="font-display text-sm font-semibold mb-3 text-gold">Bebidas de Temporada</h3>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
