@@ -75,7 +75,7 @@ export function useOrderSubscription(orderId: string) {
         }
       } catch (err) {
         console.error('Catch error:', err)
-        if (!hasData) {
+        if (!localStorageData) {
           // Demo fallback on error
           const demoOrder = {
             id: orderId,
