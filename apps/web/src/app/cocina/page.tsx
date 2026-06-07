@@ -67,19 +67,17 @@ export default function KitchenPage() {
     // First try to load from localStorage to get latest kitchen updates
     const localOrdersCache = new Map<string, any>()
     console.log('Starting to load orders...')
-    console.log('localStorage available:', typeof localStorage !== 'undefined')
     try {
       console.log('localStorage.length:', localStorage.length)
       // Scan localStorage for any order- keys
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i)
-        console.log('Checking localStorage key:', key)
         if (key?.startsWith('order-')) {
           const stored = localStorage.getItem(key)
           if (stored) {
             const order = JSON.parse(stored)
             localOrdersCache.set(order.id, order)
-            console.log('✅ Loaded order from localStorage:', order.id, order.status)
+            console.log('✅ Loaded order from localStorage:', order.id, order.status, 'Items:', order.items?.length || 0)
           }
         }
       }
@@ -122,17 +120,22 @@ export default function KitchenPage() {
 
       if (error) throw error
       if (data && data.length > 0) {
-        console.log('Orders loaded from Supabase:', data)
+        console.log('Orders loaded from Supabase:', data.length, 'orders')
         // Merge with localStorage cache to get latest kitchen updates
         const mergedOrders = data.map(order => {
+          console.log('Processing Supabase order:', order.id, 'items:', order.items?.length || 0)
           const cachedVersion = localOrdersCache.get(order.id)
           if (cachedVersion) {
-            // Use cached version if it's newer
+            // Use cached version but preserve items from Supabase
             const supabaseTime = new Date(order.updated_at || 0).getTime()
             const cachedTime = new Date(cachedVersion.updated_at || 0).getTime()
             if (cachedTime > supabaseTime) {
-              console.log('Using cached version for order:', order.id, cachedVersion.status)
-              return cachedVersion
+              console.log('Using cached version for order:', order.id, 'with items:', order.items?.length || 0)
+              // Keep the items from Supabase, only update status
+              return {
+                ...cachedVersion,
+                items: order.items // Preserve items from Supabase
+              }
             }
           }
           return order
