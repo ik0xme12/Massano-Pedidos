@@ -116,19 +116,24 @@ export function useOrderSubscription(orderId: string) {
       .subscribe()
 
     // Listen for localStorage updates (from kitchen panel)
-    const handleOrderUpdate = (e: any) => {
-      console.log('Order update event received:', e.detail)
-      if (e.detail?.id === orderId) {
-        console.log('Updating order from event:', e.detail)
-        setOrder(e.detail as Order)
+    const handleStorageChange = (e: StorageEvent) => {
+      console.log('Storage change detected:', e.key)
+      if (e.key === `order-${orderId}` && e.newValue) {
+        try {
+          const updatedOrder = JSON.parse(e.newValue)
+          console.log('Updating order from storage event:', updatedOrder)
+          setOrder(updatedOrder as Order)
+        } catch (err) {
+          console.error('Error parsing storage update:', err)
+        }
       }
     }
-    console.log('Registering order-updated listener for order:', orderId)
-    window.addEventListener('order-updated', handleOrderUpdate)
+    console.log('Registering storage listener for order:', orderId)
+    window.addEventListener('storage', handleStorageChange)
 
     return () => {
       subscription.unsubscribe()
-      window.removeEventListener('order-updated', handleOrderUpdate)
+      window.removeEventListener('storage', handleStorageChange)
     }
   }, [orderId])
 
