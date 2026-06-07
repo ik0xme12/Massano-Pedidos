@@ -141,8 +141,10 @@ export default function KitchenPage() {
     try {
       const orderToSave = updatedOrders.find(o => o.id === orderId)
       if (orderToSave) {
+        console.log('Saving order to localStorage:', orderId, newStatus)
         localStorage.setItem(`order-${orderId}`, JSON.stringify(orderToSave))
         // Disparar evento para notificar a otros tabs/componentes
+        console.log('Dispatching order-updated event:', orderToSave)
         window.dispatchEvent(new CustomEvent('order-updated', { detail: orderToSave }))
       }
     } catch (err) {

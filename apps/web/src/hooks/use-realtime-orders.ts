@@ -103,10 +103,13 @@ export function useOrderSubscription(orderId: string) {
 
     // Listen for localStorage updates (from kitchen panel)
     const handleOrderUpdate = (e: any) => {
+      console.log('Order update event received:', e.detail)
       if (e.detail?.id === orderId) {
+        console.log('Updating order from event:', e.detail)
         setOrder(e.detail as Order)
       }
     }
+    console.log('Registering order-updated listener for order:', orderId)
     window.addEventListener('order-updated', handleOrderUpdate)
 
     return () => {
