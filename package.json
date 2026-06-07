@@ -5,7 +5,7 @@
   "scripts": {
     "web": "pnpm --filter web dev",
     "mobile": "pnpm --filter mobile start",
-    "build": "cd apps/web && npm run build"
+    "build": "npm --prefix apps/web run build"
   },
   "workspaces": [
     "apps/*",
