@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Massano Cafetería",
   description: "Pedí tus favoritos de Massano Cafetería",
-  icons: { icon: "/massano-logo.png" },
+  icons: { icon: "/icono-massano.png" },
 };
 
 export default function RootLayout({
