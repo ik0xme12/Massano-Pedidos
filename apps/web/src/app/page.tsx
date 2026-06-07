@@ -162,63 +162,39 @@ export default function Home() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="bg-gradient-to-b from-olive to-olive/95 text-white overflow-hidden relative">
-        <div className="mx-auto max-w-2xl px-5 py-8">
-          {/* Header compacto */}
-          <div className="mb-6">
+      <section className="bg-olive text-white py-10">
+        <div className="mx-auto max-w-2xl px-5">
+          <div className="mb-8">
             <Image
               src="/massano5.png"
               alt="Massano Cafetería"
-              width={140}
-              height={50}
+              width={120}
+              height={40}
               priority
-              className="object-contain mb-3"
+              className="object-contain mb-4"
               style={{
                 filter: "brightness(0) saturate(100%) invert(69%) sepia(28%) saturate(550%) hue-rotate(4deg) brightness(80%)",
               }}
             />
-            <h1 className="font-display text-2xl font-bold leading-tight text-white">
+            <h1 className="font-display text-3xl font-bold text-white mb-3">
               Tu pan y café<br />
               <span className="text-gold">en tu puerta</span>
             </h1>
-          </div>
-
-          {/* Grid de imágenes principal */}
-          <div className="mb-6">
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { name: 'Café', url: 'https://picsum.photos/112/112?random=1' },
-                { name: 'Pan', url: 'https://picsum.photos/112/112?random=2' },
-                { name: 'Pastel', url: 'https://picsum.photos/112/112?random=3' },
-                { name: 'Sándwich', url: 'https://picsum.photos/112/112?random=4' },
-                { name: 'Galletas', url: 'https://picsum.photos/112/112?random=5' },
-                { name: 'Bebida', url: 'https://picsum.photos/112/112?random=6' },
-              ].map((item) => (
-                <div key={item.name} className="aspect-square">
-                  <img
-                    src={item.url}
-                    alt={item.name}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Footer minimalista */}
-          <div className="flex items-center justify-between">
-            <div className="flex gap-3 text-xs text-white/70">
+            <p className="text-sm text-white/70 mb-6">
+              Ordena tus favoritos y recíbelos frescos en minutos.
+            </p>
+            <div className="flex items-center gap-4 text-xs text-white/60 mb-6">
               <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3 text-gold" />
+                <Clock className="h-4 w-4 text-gold" />
                 <span>{formatDeliveryTime(20, 35)}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Star className="h-3 w-3 text-gold fill-gold" />
-                <span>4.9 · 318</span>
+                <Star className="h-4 w-4 text-gold fill-gold" />
+                <span>4.9 · 318 reseñas</span>
               </div>
             </div>
-            <Button variant="gold" size="sm" onClick={toggleCart}>
-              Ordenar
+            <Button variant="gold" onClick={toggleCart}>
+              Ordenar ahora
             </Button>
           </div>
         </div>
