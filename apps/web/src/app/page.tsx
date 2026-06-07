@@ -168,8 +168,8 @@ export default function Home() {
             <Image
               src="/massano5.png"
               alt="Massano Cafetería"
-              width={120}
-              height={40}
+              width={180}
+              height={60}
               priority
               className="object-contain mb-4"
               style={{
