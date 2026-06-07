@@ -16,20 +16,28 @@ export function useOrderSubscription(orderId: string) {
     setLoading(true)
     let localStorageData: Order | null = null
 
-    // Try to load from localStorage first (fastest)
+    // Try to load from localStorage first (fastest and most recent)
     try {
       const stored = localStorage.getItem(`order-${orderId}`)
       if (stored) {
         localStorageData = JSON.parse(stored) as Order
         setOrder(localStorageData)
         console.log('Loaded order from localStorage:', localStorageData)
+        setLoading(false)
+        // Don't fetch from Supabase if we have fresh data from kitchen panel
+        // Just set up listener and return
       }
     } catch (err) {
       console.error('Error loading from localStorage:', err)
     }
 
-    // Then try Supabase
+    // Only fetch from Supabase if no localStorage data
     const fetchOrder = async () => {
+      if (localStorageData) {
+        console.log('Using localStorage data, skipping Supabase fetch')
+        return
+      }
+
       try {
         console.log('Fetching order from Supabase:', orderId)
         const { data, error: fetchError } = await supabase
@@ -40,43 +48,7 @@ export function useOrderSubscription(orderId: string) {
 
         if (fetchError) {
           console.error('Supabase error:', fetchError)
-          if (!localStorageData) {
-            // Demo data when Supabase is not available and no localStorage
-            const demoOrder = {
-              id: orderId,
-              status: 'pending' as const,
-              total: 2500,
-              user_id: 'demo',
-              delivery_address: 'Demo Address',
-              payment_method: 'cash',
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            } as Order
-            setOrder(demoOrder)
-          }
-          setLoading(false)
-          return
-        }
-        console.log('Order loaded from Supabase:', data)
-
-        // Compare timestamps: only update if Supabase is newer
-        if (localStorageData) {
-          const supabaseTime = new Date(data?.updated_at || 0).getTime()
-          const localTime = new Date(localStorageData.updated_at || 0).getTime()
-          if (supabaseTime > localTime) {
-            console.log('Supabase data is newer, updating from Supabase')
-            setOrder(data as Order)
-          } else {
-            console.log('Local data is newer or same, keeping localStorage version')
-          }
-        } else {
-          // No local data, use Supabase
-          setOrder(data as Order)
-        }
-      } catch (err) {
-        console.error('Catch error:', err)
-        if (!localStorageData) {
-          // Demo fallback on error
+          // Demo data when Supabase is not available and no localStorage
           const demoOrder = {
             id: orderId,
             status: 'pending' as const,
@@ -88,7 +60,25 @@ export function useOrderSubscription(orderId: string) {
             updated_at: new Date().toISOString(),
           } as Order
           setOrder(demoOrder)
+          setLoading(false)
+          return
         }
+        console.log('Order loaded from Supabase:', data)
+        setOrder(data as Order)
+      } catch (err) {
+        console.error('Catch error:', err)
+        // Demo fallback on error
+        const demoOrder = {
+          id: orderId,
+          status: 'pending' as const,
+          total: 2500,
+          user_id: 'demo',
+          delivery_address: 'Demo Address',
+          payment_method: 'cash',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        } as Order
+        setOrder(demoOrder)
       } finally {
         setLoading(false)
       }
