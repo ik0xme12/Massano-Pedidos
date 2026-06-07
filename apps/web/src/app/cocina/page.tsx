@@ -66,19 +66,24 @@ export default function KitchenPage() {
   const loadOrders = async () => {
     // First try to load from localStorage to get latest kitchen updates
     const localOrdersCache = new Map<string, any>()
+    console.log('Starting to load orders...')
+    console.log('localStorage available:', typeof localStorage !== 'undefined')
     try {
+      console.log('localStorage.length:', localStorage.length)
       // Scan localStorage for any order- keys
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i)
+        console.log('Checking localStorage key:', key)
         if (key?.startsWith('order-')) {
           const stored = localStorage.getItem(key)
           if (stored) {
             const order = JSON.parse(stored)
             localOrdersCache.set(order.id, order)
-            console.log('Loaded order from localStorage:', order.id, order.status)
+            console.log('✅ Loaded order from localStorage:', order.id, order.status)
           }
         }
       }
+      console.log('Total orders in localStorage cache:', localOrdersCache.size)
     } catch (err) {
       console.error('Error loading from localStorage:', err)
     }
@@ -179,8 +184,11 @@ export default function KitchenPage() {
           ...orderToSave,
           updated_at: new Date().toISOString()
         }
-        console.log('Saving order to localStorage:', orderId, newStatus)
-        localStorage.setItem(`order-${orderId}`, JSON.stringify(orderWithNewTimestamp))
+        const key = `order-${orderId}`
+        console.log('About to save order to localStorage:', key, orderWithNewTimestamp)
+        localStorage.setItem(key, JSON.stringify(orderWithNewTimestamp))
+        const stored = localStorage.getItem(key)
+        console.log('Verified saved to localStorage:', key, stored)
         // Disparar evento para notificar a otros tabs/componentes
         console.log('Dispatching order-updated event:', orderWithNewTimestamp)
         window.dispatchEvent(new CustomEvent('order-updated', { detail: orderWithNewTimestamp }))
