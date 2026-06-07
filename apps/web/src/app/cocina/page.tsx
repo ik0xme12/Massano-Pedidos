@@ -123,24 +123,32 @@ export default function KitchenPage() {
         console.log('Orders loaded from Supabase:', data.length, 'orders')
         // Merge with localStorage cache to get latest kitchen updates
         const mergedOrders = data.map(order => {
-          console.log('Processing Supabase order:', order.id, 'items:', order.items?.length || 0)
+          const itemsCount = order.order_items?.length || 0
+          console.log('Processing Supabase order:', order.id, 'items:', itemsCount)
           const cachedVersion = localOrdersCache.get(order.id)
           if (cachedVersion) {
             // Use cached version but preserve items from Supabase
             const supabaseTime = new Date(order.updated_at || 0).getTime()
             const cachedTime = new Date(cachedVersion.updated_at || 0).getTime()
+            console.log('Comparing times - Supabase:', supabaseTime, 'Cached:', cachedTime)
             if (cachedTime > supabaseTime) {
-              console.log('Using cached version for order:', order.id, 'with items:', order.items?.length || 0)
-              // Keep the items from Supabase, only update status
+              console.log('Using cached version for order:', order.id)
+              // Keep the cached version (which has the new status) but use items from Supabase
               return {
                 ...cachedVersion,
-                items: order.items // Preserve items from Supabase
+                order_items: order.order_items, // Use Supabase items (correct key name)
+                items: order.order_items // Also add as items for compatibility
               }
             }
           }
-          return order
+          // Use Supabase version with both keys for compatibility
+          return {
+            ...order,
+            items: order.order_items // Add items as alias for order_items
+          }
         })
-        setOrders(mergedOrders)
+        console.log('Final merged orders:', mergedOrders)
+        setOrders(mergedOrders as any)
       } else {
         console.log('No orders in Supabase, showing demo data')
         setOrders(demoOrders)
