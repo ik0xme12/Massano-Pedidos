@@ -127,21 +127,16 @@ export default function KitchenPage() {
           console.log('Processing Supabase order:', order.id, 'items:', itemsCount)
           const cachedVersion = localOrdersCache.get(order.id)
           if (cachedVersion) {
-            // Use cached version but preserve items from Supabase
-            const supabaseTime = new Date(order.updated_at || 0).getTime()
-            const cachedTime = new Date(cachedVersion.updated_at || 0).getTime()
-            console.log('Comparing times - Supabase:', supabaseTime, 'Cached:', cachedTime)
-            if (cachedTime > supabaseTime) {
-              console.log('Using cached version for order:', order.id)
-              // Keep the cached version (which has the new status) but use items from Supabase
-              return {
-                ...cachedVersion,
-                order_items: order.order_items, // Use Supabase items (correct key name)
-                items: order.order_items // Also add as items for compatibility
-              }
+            // ALWAYS use cached version from localStorage (kitchen panel updates)
+            // because Supabase doesn't have the latest status changes
+            console.log('Using localStorage version for order:', order.id, 'status:', cachedVersion.status)
+            return {
+              ...cachedVersion,
+              order_items: order.order_items, // Always use Supabase items (latest products)
+              items: order.order_items // Also add as items for compatibility
             }
           }
-          // Use Supabase version with both keys for compatibility
+          // No cached version, use Supabase
           return {
             ...order,
             items: order.order_items // Add items as alias for order_items
