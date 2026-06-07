@@ -75,6 +75,7 @@ export default function KitchenPage() {
       setOrders(data || [])
     } catch (error) {
       console.error('Error loading orders:', error)
+      console.log('Showing demo data instead')
       // Demo data when Supabase is not configured
       const demoOrders = [
         {
@@ -99,6 +100,7 @@ export default function KitchenPage() {
           ]
         }
       ] as any
+      console.log('Setting demo orders:', demoOrders)
       setOrders(demoOrders)
     }
   }
