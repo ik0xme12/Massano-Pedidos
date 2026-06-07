@@ -18,7 +18,7 @@ import { useProductCustomizations } from "@/hooks/use-product-customizations"
 import { useUserMostOrdered } from "@/hooks/use-user-most-ordered"
 import { formatDeliveryTime, formatPrice } from "@/lib/utils"
 import { productSearch } from "@/lib/product-search"
-import { Clock, ShoppingBag, Star, Truck, LogOut, Sliders } from "lucide-react"
+import { Clock, ShoppingBag, Star, LogOut, Sliders } from "lucide-react"
 import type { Product } from "@shared/types"
 
 const CATEGORIES = [
@@ -227,79 +227,71 @@ export default function Home() {
         onClose={() => setIsCategoryModalOpen(false)}
       />
 
-      {/* ── Producto Más Pedido ── */}
+      {/* ── Tu Favorito (Carrusel) ── */}
       {user && mostOrderedProduct && (
-        <section className="mx-auto max-w-2xl px-5 py-8 border-b border-border">
-          <h2 className="font-display text-xl font-semibold mb-4">Tu favorito</h2>
-          <div className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow">
-            <div className="flex gap-4">
-              {mostOrderedProduct.image_url && (
-                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                  <Image
-                    src={mostOrderedProduct.image_url}
-                    alt={mostOrderedProduct.name}
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground">{mostOrderedProduct.name}</h3>
-                {mostOrderedProduct.description && (
-                  <p className="text-sm text-muted-foreground mb-3">{mostOrderedProduct.description}</p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-lg text-gold">{formatPrice(mostOrderedProduct.price)}</span>
-                  <Button
-                    variant="gold"
-                    size="sm"
-                    onClick={() => handleAddProduct(mostOrderedProduct)}
-                  >
-                    Agregar
-                  </Button>
-                </div>
+        <section className="mx-auto max-w-2xl px-5 py-4 border-b border-border">
+          <h3 className="font-display text-sm font-semibold mb-3 text-gold">Tu favorito</h3>
+          <div className="bg-card border border-border rounded-lg p-3 flex gap-3 hover:shadow-sm transition-shadow">
+            {mostOrderedProduct.image_url && (
+              <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                <Image
+                  src={mostOrderedProduct.image_url}
+                  alt={mostOrderedProduct.name}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <div className="flex-1 flex flex-col justify-between">
+              <div>
+                <h4 className="text-sm font-semibold text-foreground line-clamp-2">{mostOrderedProduct.name}</h4>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-gold">{formatPrice(mostOrderedProduct.price)}</span>
+                <Button
+                  variant="gold"
+                  size="sm"
+                  onClick={() => handleAddProduct(mostOrderedProduct)}
+                  className="text-xs h-8 px-3"
+                >
+                  Agregar
+                </Button>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* ── Sándwiches de Temporada ── */}
+      {/* ── Sándwiches de Temporada (Carrusel) ── */}
       {seasonalSandwiches.length > 0 && (
-        <section className="mx-auto max-w-2xl px-5 py-8 border-b border-border">
-          <h2 className="font-display text-xl font-semibold mb-4">Sándwiches de Temporada</h2>
-          <div className="grid grid-cols-1 gap-4">
-            {seasonalSandwiches.slice(0, 3).map(product => (
-              <div key={product.id} className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex gap-4">
-                  {product.image_url && (
-                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                      <Image
-                        src={product.image_url}
-                        alt={product.name}
-                        width={80}
-                        height={80}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground">{product.name}</h3>
-                    {product.description && (
-                      <p className="text-sm text-muted-foreground mb-3">{product.description}</p>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-lg text-gold">{formatPrice(product.price)}</span>
-                      <Button
-                        variant="gold"
-                        size="sm"
-                        onClick={() => handleAddProduct(product)}
-                      >
-                        {getQuantity(product.id) > 0 ? `${getQuantity(product.id)} en carrito` : 'Agregar'}
-                      </Button>
-                    </div>
+        <section className="mx-auto max-w-2xl px-5 py-4 border-b border-border">
+          <h3 className="font-display text-sm font-semibold mb-3 text-gold">Sándwiches de Temporada</h3>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+            {seasonalSandwiches.map(product => (
+              <div key={product.id} className="flex-shrink-0 w-32 bg-card border border-border rounded-lg p-2 hover:shadow-sm transition-shadow">
+                {product.image_url && (
+                  <div className="w-full h-20 rounded-lg overflow-hidden mb-2">
+                    <Image
+                      src={product.image_url}
+                      alt={product.name}
+                      width={128}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
+                )}
+                <h4 className="text-xs font-semibold text-foreground mb-2 line-clamp-2">{product.name}</h4>
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-xs font-bold text-gold">{formatPrice(product.price)}</span>
+                  <Button
+                    variant="gold"
+                    size="sm"
+                    onClick={() => handleAddProduct(product)}
+                    className="text-xs h-6 px-2"
+                  >
+                    +
+                  </Button>
                 </div>
               </div>
             ))}
@@ -307,34 +299,34 @@ export default function Home() {
         </section>
       )}
 
-      {/* ── Bebidas de Temporada ── */}
+      {/* ── Bebidas de Temporada (Carrusel) ── */}
       {seasonalBeverages.length > 0 && (
-        <section className="mx-auto max-w-2xl px-5 py-8 border-b border-border">
-          <h2 className="font-display text-xl font-semibold mb-4">Bebidas de Temporada</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {seasonalBeverages.slice(0, 4).map(product => (
-              <div key={product.id} className="bg-card border border-border rounded-lg p-3 hover:shadow-md transition-shadow">
+        <section className="mx-auto max-w-2xl px-5 py-4 border-b border-border">
+          <h3 className="font-display text-sm font-semibold mb-3 text-gold">Bebidas de Temporada</h3>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+            {seasonalBeverages.map(product => (
+              <div key={product.id} className="flex-shrink-0 w-28 bg-card border border-border rounded-lg p-2 hover:shadow-sm transition-shadow">
                 {product.image_url && (
-                  <div className="w-full h-24 rounded-lg overflow-hidden mb-2">
+                  <div className="w-full h-20 rounded-lg overflow-hidden mb-2">
                     <Image
                       src={product.image_url}
                       alt={product.name}
-                      width={120}
-                      height={100}
+                      width={112}
+                      height={80}
                       className="w-full h-full object-cover"
                     />
                   </div>
                 )}
-                <h3 className="font-semibold text-sm text-foreground mb-1">{product.name}</h3>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gold text-sm">{formatPrice(product.price)}</span>
+                <h4 className="text-xs font-semibold text-foreground mb-2 line-clamp-2">{product.name}</h4>
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-xs font-bold text-gold text-nowrap">{formatPrice(product.price)}</span>
                   <Button
                     variant="gold"
                     size="sm"
                     onClick={() => handleAddProduct(product)}
-                    className="text-xs px-2"
+                    className="text-xs h-6 px-2 flex-shrink-0"
                   >
-                    {getQuantity(product.id) > 0 ? `${getQuantity(product.id)}` : '+'}
+                    +
                   </Button>
                 </div>
               </div>
