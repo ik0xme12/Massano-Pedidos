@@ -166,15 +166,12 @@ export default function Home() {
         <div className="mx-auto max-w-2xl px-5">
           <div className="mb-8">
             <Image
-              src="/massano5.png"
+              src="/icono-massano.png"
               alt="Massano Cafetería"
-              width={120}
-              height={40}
+              width={100}
+              height={100}
               priority
-              className="object-contain mb-4"
-              style={{
-                filter: "brightness(0) saturate(100%) invert(69%) sepia(28%) saturate(550%) hue-rotate(4deg) brightness(80%)",
-              }}
+              className="object-contain mb-6"
             />
             <h1 className="font-display text-3xl font-bold text-white mb-3">
               Tu pan y café<br />
