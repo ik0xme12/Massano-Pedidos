@@ -47,7 +47,7 @@ export default function KitchenPage() {
           setIsKitchenStaff(true)
         }
 
-        loadOrders()
+        await loadOrders()
         subscribeToOrders()
       } catch (error) {
         console.error('Error:', error)
