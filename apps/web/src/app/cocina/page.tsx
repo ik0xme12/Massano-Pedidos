@@ -141,11 +141,16 @@ export default function KitchenPage() {
     try {
       const orderToSave = updatedOrders.find(o => o.id === orderId)
       if (orderToSave) {
+        // Update the timestamp so it's considered newer than Supabase data
+        const orderWithNewTimestamp = {
+          ...orderToSave,
+          updated_at: new Date().toISOString()
+        }
         console.log('Saving order to localStorage:', orderId, newStatus)
-        localStorage.setItem(`order-${orderId}`, JSON.stringify(orderToSave))
+        localStorage.setItem(`order-${orderId}`, JSON.stringify(orderWithNewTimestamp))
         // Disparar evento para notificar a otros tabs/componentes
-        console.log('Dispatching order-updated event:', orderToSave)
-        window.dispatchEvent(new CustomEvent('order-updated', { detail: orderToSave }))
+        console.log('Dispatching order-updated event:', orderWithNewTimestamp)
+        window.dispatchEvent(new CustomEvent('order-updated', { detail: orderWithNewTimestamp }))
       }
     } catch (err) {
       console.error('Error saving to localStorage:', err)
